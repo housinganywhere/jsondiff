@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gopherjs/jquery"
-	"github.com/nsf/jsondiff"
+	"github.com/housinganywhere/jsondiff"
 )
 
 var jq = jquery.NewJQuery
