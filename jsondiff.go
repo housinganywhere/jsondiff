@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"reflect"
+	"regexp"
 	"sort"
 	"strconv"
 )
@@ -269,7 +270,9 @@ func (ctx *context) printDiff(a, b interface{}) {
 			}
 		case string:
 			bb, ok := b.(string)
-			if !ok || aa != bb {
+			// if !ok || aa != bb {
+			matched, _ := regexp.MatchString(aa, bb)
+			if !ok || !matched {
 				ctx.printMismatch(a, b)
 				ctx.result(NoMatch)
 				return
