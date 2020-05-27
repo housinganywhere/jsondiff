@@ -23,10 +23,14 @@ var cases = []struct {
 	{`{"a": 3.1415}`, `{"a": 3.1415}`, FullMatch},
 	{`{"a": 4213123123}`, `{"a": "4213123123"}`, NoMatch},
 	{`{"a": 4213123123}`, `{"a": 4213123123}`, FullMatch},
-	{`"dnsutils"`, `"dns"`, FullMatch}, // for literal strings
-	{`{"dnsutils": 4213123123}`, `{"dns": 4213123123}`, SupersetMatch},
+	{`"dns"`, `"dns.1239102398"`, FullMatch},       // regex for literal strings
+	{`{"a":"dns"}`, `{"a":"dnsutils"}`, FullMatch}, // regex for literal string values
+	{`{"name": "dns"}`, `{"name": "dnsutils"}`, FullMatch},
+	{`{"dnsutils": 4213123123}`, `{"dns[a-zA-Z]{5}": 4213123123}`, SupersetMatch},
 	{`{"dnsutils": 4213123123}`, `{"dns": 4213123123, "b": "lessQQ"}`, NoMatch},
-	{`{"dnsutils": 4213123123, "existsNot": "morePewPew"}`, `{"dns": 4213123123}`, SupersetMatch},
+	{`{"dnsutils": 4213123123, "existsNot": "morePewPew"}`, `{"dns": 4213123124}`, SupersetMatch},
+	{`"metadata": {"name": "monitoring-dnsutils","namespace": "monitoring"}`, `"metadata": {"name": "monitoring-dns","namespace": "monitoring"}`, FullMatch},
+	{`{"metadata": {"name": "monitoring-dnsutils","namespace": "monitoring"}}`, `{"metadata": {"name": "monitoring-dnsutils.90239123","namespace": "monitoring"}}`, FullMatch},
 }
 
 func TestCompare(t *testing.T) {

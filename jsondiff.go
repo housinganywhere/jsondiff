@@ -271,7 +271,7 @@ func (ctx *context) printDiff(a, b interface{}) {
 		case string:
 			bb, ok := b.(string)
 			// if !ok || aa != bb {
-			matched, _ := regexp.MatchString(bb, aa)
+			matched, _ := regexp.MatchString(aa, bb)
 			if !ok || !matched {
 				ctx.printMismatch(a, b)
 				ctx.result(NoMatch)
