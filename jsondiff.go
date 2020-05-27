@@ -271,7 +271,7 @@ func (ctx *context) printDiff(a, b interface{}) {
 		case string:
 			bb, ok := b.(string)
 			// if !ok || aa != bb {
-			matched, _ := regexp.MatchString(aa, bb)
+			matched, _ := regexp.MatchString(bb, aa)
 			if !ok || !matched {
 				ctx.printMismatch(a, b)
 				ctx.result(NoMatch)
@@ -348,10 +348,27 @@ func (ctx *context) printDiff(a, b interface{}) {
 				ctx.writeValue(va, true)
 				ctx.result(SupersetMatch)
 			} else if bok {
-				ctx.tag(&ctx.opts.Added)
-				ctx.key(k)
-				ctx.writeValue(vb, true)
-				ctx.result(NoMatch)
+				// check if the b key partially macthes any other a key
+				var submatch = false
+				for ik, _ := range ma {
+					if reflect.TypeOf(k).Kind() != reflect.String { // ignore non string keys
+						continue
+					}
+					if matched, _ := regexp.MatchString(k, ik); matched {
+						submatch = true
+						ctx.key(ik)
+						break // no need to check any other keys
+					}
+				}
+				if submatch {
+					ctx.writeValue(vb, true)
+					ctx.result(SupersetMatch)
+				} else {
+					ctx.tag(&ctx.opts.Added)
+					ctx.key(k)
+					ctx.writeValue(vb, true)
+					ctx.result(NoMatch)
+				}
 			}
 			ctx.tag(&ctx.opts.Normal)
 			if i != len(keys)-1 {

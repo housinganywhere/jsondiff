@@ -23,6 +23,10 @@ var cases = []struct {
 	{`{"a": 3.1415}`, `{"a": 3.1415}`, FullMatch},
 	{`{"a": 4213123123}`, `{"a": "4213123123"}`, NoMatch},
 	{`{"a": 4213123123}`, `{"a": 4213123123}`, FullMatch},
+	{`"dnsutils"`, `"dns"`, FullMatch}, // for literal strings
+	{`{"dnsutils": 4213123123}`, `{"dns": 4213123123}`, SupersetMatch},
+	{`{"dnsutils": 4213123123}`, `{"dns": 4213123123, "b": "lessQQ"}`, NoMatch},
+	{`{"dnsutils": 4213123123, "existsNot": "morePewPew"}`, `{"dns": 4213123123}`, SupersetMatch},
 }
 
 func TestCompare(t *testing.T) {
