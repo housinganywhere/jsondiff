@@ -271,7 +271,8 @@ func (ctx *context) printDiff(a, b interface{}) {
 		case string:
 			bb, ok := b.(string)
 			// if !ok || aa != bb {
-			matched, _ := regexp.MatchString(aa, bb)
+			// matched, _ := regexp.MatchString(aa, bb)
+			matched, _ := regexp.MatchString(bb, aa)
 			if !ok || !matched {
 				ctx.printMismatch(a, b)
 				ctx.result(NoMatch)
@@ -354,7 +355,8 @@ func (ctx *context) printDiff(a, b interface{}) {
 					if reflect.TypeOf(k).Kind() != reflect.String { // ignore non string keys
 						continue
 					}
-					if matched, _ := regexp.MatchString(k, ik); matched {
+					// if matched, _ := regexp.MatchString(k, ik); matched {
+					if matched, _ := regexp.MatchString(ik, k); matched {
 						submatch = true
 						ctx.key(ik)
 						break // no need to check any other keys
